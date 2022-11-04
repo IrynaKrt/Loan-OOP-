@@ -27,7 +27,7 @@ export default class Slider {
             if(this.slideIndex === 3) {
                 setTimeout(function () {
                     item.style.display = 'block';
-                    item.classList.add('animated', 'fadeInUp')
+                    item.classList.add('animated', 'fadeInUp');
                 }, 3000);
             }
         });
