@@ -22,7 +22,7 @@ export default class MiniSlider extends Slider {
         }
     }
 
-    paused() {
+    paused() { //стоп при наведении
 		let autoplay = setInterval(() => {
 			this.nextSlide();
 		}, 5000);
@@ -84,34 +84,36 @@ export default class MiniSlider extends Slider {
     }
 
     init() {
+       try {
         this.container.style.cssText = `
-            display: flex;
-            flex-wrap: wrap;
-            overflow: hidden;
-            align-items: flex-start;
-        `;
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+        align-items: flex-start;
+            `;
 
-        this.bindTriggers();
-        this.decoriseSlides();
+            this.bindTriggers();
+            this.decoriseSlides();
 
-        if (this.autoplay) {
-            this.paused();
-
-            this.slides[0].parentNode.addEventListener('mouseleave', () => {
+            if (this.autoplay) {
                 this.paused();
-            });
 
-            this.next.forEach(item => {
-                item.addEventListener('mouseleave', () => {
+                this.slides[0].parentNode.addEventListener('mouseleave', () => {
                     this.paused();
                 });
-            });
-    
-            this.prev.forEach(item => {
-                item.addEventListener('mouseleave', () => {
-                    this.paused();
+
+                this.next.forEach(item => {
+                    item.addEventListener('mouseleave', () => {
+                        this.paused();
+                    });
                 });
-            });
-        }
+
+                this.prev.forEach(item => {
+                    item.addEventListener('mouseleave', () => {
+                        this.paused();
+                    });
+                });
+            }
+            } catch(e) {}
     }
 }

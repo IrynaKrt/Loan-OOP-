@@ -8,7 +8,7 @@ export default class Slider {
                 animate,
                 autoplay} = {}){
         this.container = document.querySelector(container);
-        this.slides = this.container.children;
+        try{this.slides = this.container.children;} catch(e) {}
         this.btns = document.querySelectorAll(btns);
         this.prev = document.querySelectorAll(prev);
         this.next = document.querySelectorAll(next);
@@ -46,22 +46,24 @@ export default class Slider {
     }
 
     plusSlides(n) {
-        this.showSlides(this.slideIndex += n);
+        try {this.showSlides(this.slideIndex += n);} catch(e) {}
     }
 
     render() {
-        this.btns.forEach(item => {
-            item.addEventListener('click', () => {
-                this.plusSlides(1);
+        try {
+            this.btns.forEach(item => {
+                item.addEventListener('click', () => {
+                    this.plusSlides(1);
+                });
+
+                item.parentNode.previousElementSibling.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.slideIndex = 1;
+                    this.showSlides(this.slideIndex);
+                });
             });
 
-            item.parentNode.previousElementSibling.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.slideIndex = 1;
-                this.showSlides(this.slideIndex);
-            });
-        });
-
-        this.showSlides(this.slideIndex);
+            this.showSlides(this.slideIndex);
+        } catch(e) {}
     }
 }
