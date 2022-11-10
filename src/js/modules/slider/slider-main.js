@@ -1,7 +1,7 @@
 import Slider from "./slider";
 
 export default class MainSlider extends Slider {
-    constructor(container, btns, modal) {
+    constructor(container, btns, modal, prevModule, nextModule) {
         super(container, btns, modal);
     }
     
@@ -35,8 +35,7 @@ export default class MainSlider extends Slider {
         this.showSlides(this.slideIndex += n);
     }
 
-    render() {
-        try{
+    bindTriggers() {
         this.btns.forEach(item => {
             item.addEventListener('click', () => {
                 this.plusSlides(1);
@@ -49,7 +48,30 @@ export default class MainSlider extends Slider {
             });
         });
 
+        
+        this.prevModule.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.plusSlides(-1);
+            });
+        });
+
+        this.nextModule.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();//отмена всплытия событий
+
+                this.plusSlides(1);
+            });
+        });
+    }
+
+    render() {
+        if(this.container) {//исправление бага с многостраничым проектом
+        this.bindTriggers();
         this.showSlides(this.slideIndex);
-        } catch(e) {}
+        } 
     }
 }

@@ -3,10 +3,15 @@ import MiniSlider from "./modules/slider/slider-mini";
 import VideoPlayer from "./modules/playVideo";
 import Difference from "./modules/difference";
 import Form from "./modules/form";
+import Accordion from "./modules/accordion";
+import Download from "./modules/download";
 
 window.addEventListener('DOMContentLoaded', () => {
     const slider = new MainSlider({container:'.page', btns:'.next', modal:'.hanson'});
     slider.render();
+
+    const moduleSlider = new MainSlider({container: '.moduleapp', btns: '.next', prevModule: '.prevmodule', nextModule: '.nextmodule'});
+    moduleSlider.render();
 
     const showUpSlider = new MiniSlider({
         container: '.showup__content-slider',
@@ -35,9 +40,13 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     feedSlider.init();
 
-    const player = new VideoPlayer('.showup .play', '.overlay');
-    player.init();
+    new VideoPlayer('.showup .play', '.overlay').init();
+    new VideoPlayer('.module__video-item .play', '.overlay').init();
 
     new Difference('.officerold', '.officernew', '.officer__card-item').init(); //фльтернативный способ вызова(как бы говоря, что вызывается только 1 раз)
     new Form('.form', 'assets/question.php').init();
+
+    new Accordion('.plus__content').render();
+
+    new Download('.download').init();
 });
