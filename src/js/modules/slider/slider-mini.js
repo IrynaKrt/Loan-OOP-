@@ -58,7 +58,7 @@ export default class MiniSlider extends Slider {
         });
     }
 
-    moveButtonsToEnd() { //элегантное решение проблемы кнопок в слойдере!
+    moveButtonsToEnd() { //элегантное решение проблемы кнопок в слaйдере!
         this.slides.forEach((slide, i) => {
             if(slide.tagName === "BUTTON") {
                 this.container.appendChild(this.slides[i]);
