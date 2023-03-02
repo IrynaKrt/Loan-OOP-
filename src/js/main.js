@@ -13,6 +13,12 @@ window.addEventListener('DOMContentLoaded', () => {
     const moduleSlider = new MainSlider({container: '.moduleapp', btns: '.next', prevModule: '.prevmodule', nextModule: '.nextmodule'});
     moduleSlider.render();
 
+    const schleudeSliderModule = new MainSlider({container: '.moduleapp', btns: '.menu__block-schedule'});
+    schleudeSliderModule.render();
+
+    const schleudeSlider = new MainSlider({container: '.page', btns: '.menu__block-schedule'});
+    schleudeSlider.render();
+
     const showUpSlider = new MiniSlider({
         container: '.showup__content-slider',
         prev: '.showup__prev',
@@ -40,10 +46,16 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     feedSlider.init();
 
-    new VideoPlayer('.showup .play', '.overlay').init();
-    new VideoPlayer('.module__video-item .play', '.overlay').init();
+    const headPlayer = new VideoPlayer('.showup .play', '.overlay');
+    headPlayer.init();
+    const lastPalyer = new VideoPlayer('.schedule__wrapper .play', '.overlay');
+    lastPalyer.init();
+    const modulePlayers = new VideoPlayer('.module__video-item .play', '.overlay');
+    modulePlayers.init();
+    const feedPlayers = new VideoPlayer('.feed .playvideo', '.overlay');
+    feedPlayers.init();
 
-    new Difference('.officerold', '.officernew', '.officer__card-item').init(); //фльтернативный способ вызова(как бы говоря, что вызывается только 1 раз)
+    new Difference('.officerold', '.officernew', '.officer__card-item').init(); //aльтернативный способ вызова(как бы говоря, что вызывается только 1 раз)
     new Form('.form', 'assets/question.php').init();
 
     new Accordion('.plus__content').render();

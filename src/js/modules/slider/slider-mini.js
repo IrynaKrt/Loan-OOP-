@@ -72,7 +72,7 @@ export default class MiniSlider extends Slider {
                     this.nextSlide();
                 });
             });
-    
+
             this.prev.forEach(item => {
                 item.addEventListener('click', () => {
                     let active = this.slides[0];

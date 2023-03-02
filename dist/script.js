@@ -5102,6 +5102,16 @@ window.addEventListener('DOMContentLoaded', function () {
     nextModule: '.nextmodule'
   });
   moduleSlider.render();
+  var schleudeSliderModule = new _modules_slider_slider_main__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    container: '.moduleapp',
+    btns: '.menu__block-schedule'
+  });
+  schleudeSliderModule.render();
+  var schleudeSlider = new _modules_slider_slider_main__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    container: '.page',
+    btns: '.menu__block-schedule'
+  });
+  schleudeSlider.render();
   var showUpSlider = new _modules_slider_slider_mini__WEBPACK_IMPORTED_MODULE_1__["default"]({
     container: '.showup__content-slider',
     prev: '.showup__prev',
@@ -5126,9 +5136,15 @@ window.addEventListener('DOMContentLoaded', function () {
     activeClass: 'feed__item-active'
   });
   feedSlider.init();
-  new _modules_playVideo__WEBPACK_IMPORTED_MODULE_2__["default"]('.showup .play', '.overlay').init();
-  new _modules_playVideo__WEBPACK_IMPORTED_MODULE_2__["default"]('.module__video-item .play', '.overlay').init();
-  new _modules_difference__WEBPACK_IMPORTED_MODULE_3__["default"]('.officerold', '.officernew', '.officer__card-item').init(); //фльтернативный способ вызова(как бы говоря, что вызывается только 1 раз)
+  var headPlayer = new _modules_playVideo__WEBPACK_IMPORTED_MODULE_2__["default"]('.showup .play', '.overlay');
+  headPlayer.init();
+  var lastPalyer = new _modules_playVideo__WEBPACK_IMPORTED_MODULE_2__["default"]('.schedule__wrapper .play', '.overlay');
+  lastPalyer.init();
+  var modulePlayers = new _modules_playVideo__WEBPACK_IMPORTED_MODULE_2__["default"]('.module__video-item .play', '.overlay');
+  modulePlayers.init();
+  var feedPlayers = new _modules_playVideo__WEBPACK_IMPORTED_MODULE_2__["default"]('.feed .playvideo', '.overlay');
+  feedPlayers.init();
+  new _modules_difference__WEBPACK_IMPORTED_MODULE_3__["default"]('.officerold', '.officernew', '.officer__card-item').init(); //aльтернативный способ вызова(как бы говоря, что вызывается только 1 раз)
 
   new _modules_form__WEBPACK_IMPORTED_MODULE_4__["default"]('.form', 'assets/question.php').init();
   new _modules_accordion__WEBPACK_IMPORTED_MODULE_5__["default"]('.plus__content').render();
@@ -5169,16 +5185,18 @@ function () {
   _createClass(Accordion, [{
     key: "render",
     value: function render() {
-      this.btns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var sibling = btn.closest('.module__info-show').nextElementSibling;
-          sibling.classList.toggle('msg');
-          sibling.style.marginTop = '20px';
-          sibling.classList.add('animated', 'fadeIn'); // if(sibling.classList.closest('fadeInDown')) {
-          //     sibling.classList.add('animated', 'fadeInUp');
-          // }
+      try {
+        this.btns.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var sibling = btn.closest('.module__info-show').nextElementSibling;
+            sibling.classList.toggle('msg');
+            sibling.style.marginTop = '20px';
+            sibling.classList.add('animated', 'fadeIn'); // if(sibling.classList.closest('fadeInDown')) {
+            //     sibling.classList.add('animated', 'fadeInUp');
+            // }
+          });
         });
-      });
+      } catch (e) {}
     }
   }]);
 
@@ -5655,7 +5673,7 @@ function () {
     value: function init() {
       if (this.btns.length > 0) {
         var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
+        tag.src = "http://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         this.bindTriggers();
@@ -5735,10 +5753,10 @@ var MainSlider =
 function (_Slider) {
   _inherits(MainSlider, _Slider);
 
-  function MainSlider(container, btns, modal, prevModule, nextModule) {
+  function MainSlider(btns) {
     _classCallCheck(this, MainSlider);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(MainSlider).call(this, container, btns, modal));
+    return _possibleConstructorReturn(this, _getPrototypeOf(MainSlider).call(this, btns));
   }
 
   _createClass(MainSlider, [{
@@ -5754,20 +5772,25 @@ function (_Slider) {
         this.slideIndex = this.slides.length;
       }
 
+      try {
+        this.hanson.style.opacity = '0';
+
+        if (n == 3) {
+          this.hanson.classList.add('animated');
+          setTimeout(function () {
+            _this.hanson.style.opacity = '1';
+
+            _this.hanson.classList.add('slideInUp');
+          }, 3000);
+        } else {
+          this.hanson.classList.remove('slideInUp');
+        }
+      } catch (e) {}
+
       this.slides.forEach(function (slide) {
         slide.style.display = 'none';
       });
       this.slides[this.slideIndex - 1].style.display = 'block';
-      this.modal.forEach(function (item) {
-        item.style.display = 'none';
-
-        if (_this.slideIndex === 3) {
-          setTimeout(function () {
-            item.style.display = 'block';
-            item.classList.add('animated', 'fadeInUp');
-          }, 3000);
-        }
-      });
     }
   }, {
     key: "plusSlides",
@@ -5781,7 +5804,13 @@ function (_Slider) {
 
       this.btns.forEach(function (item) {
         item.addEventListener('click', function () {
-          _this2.plusSlides(1);
+          if (item.classList.contains('menu__block-schedule')) {
+            console.log('l');
+
+            _this2.showSlides(6);
+          } else {
+            _this2.plusSlides(1);
+          }
         });
         item.parentNode.previousElementSibling.addEventListener('click', function (e) {
           e.preventDefault();
@@ -5790,18 +5819,18 @@ function (_Slider) {
           _this2.showSlides(_this2.slideIndex);
         });
       });
-      this.prevModule.forEach(function (item) {
+      document.querySelectorAll('.prevmodule').forEach(function (item) {
         item.addEventListener('click', function (e) {
-          e.preventDefault();
           e.stopPropagation();
+          e.preventDefault();
 
           _this2.plusSlides(-1);
         });
       });
-      this.nextModule.forEach(function (item) {
+      document.querySelectorAll('.nextmodule').forEach(function (item) {
         item.addEventListener('click', function (e) {
+          e.stopPropagation();
           e.preventDefault();
-          e.stopPropagation(); //отмена всплытия событий
 
           _this2.plusSlides(1);
         });
@@ -5811,9 +5840,12 @@ function (_Slider) {
     key: "render",
     value: function render() {
       if (this.container) {
-        //исправление бага с многостраничым проектом
-        this.bindTriggers();
+        try {
+          this.hanson = document.querySelector('.hanson');
+        } catch (e) {}
+
         this.showSlides(this.slideIndex);
+        this.bindTriggers();
       }
     }
   }]);
@@ -5960,7 +5992,7 @@ function (_Slider) {
     value: function moveButtonsToEnd() {
       var _this4 = this;
 
-      //элегантное решение проблемы кнопок в слойдере!
+      //элегантное решение проблемы кнопок в слaйдере!
       this.slides.forEach(function (slide, i) {
         if (slide.tagName === "BUTTON") {
           _this4.container.appendChild(_this4.slides[i]);

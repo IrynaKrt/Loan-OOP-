@@ -1,9 +1,11 @@
 .feed
-    // display: none
     position: relative
     height: 100vh
     padding-top: 100px
     overflow: hidden
+    .overlay
+        position: absolute
+        display: flex
     .title
         margin-left: 148px
         margin-top: -20px
@@ -15,7 +17,6 @@
         height: 40%
         z-index: -1
     &__slider
-		position: relative
         width: 100%
         height: 430px
         margin-left: 148px
@@ -23,7 +24,6 @@
         z-index: 10
         .slick-prev
             z-index: 12
-            position: absolute
             bottom: 0
             left: 587px
             width: 43px
@@ -34,7 +34,6 @@
             cursor: pointer
             margin-right: 12px
             svg
-                position: absolute
                 width: 12px
                 height: 12px
                 top: 50%
@@ -42,7 +41,6 @@
                 transform: translateX(-65%) translateY(-50%)
         .slick-next
             z-index: 12
-            position: absolute
             bottom: 0
             left: 647px
             width: 43px
@@ -52,7 +50,6 @@
             background-color: transparent
             cursor: pointer
             svg
-                position: absolute
                 width: 12px
                 height: 12px
                 top: 50%
@@ -66,6 +63,7 @@
         padding: 34px 40px 66px 40px
         margin-right: 32px
         transition: 0.5s all
+        position: relative
         &-info
             display: block
             .photo
@@ -122,7 +120,6 @@
                 height: 26px
                 border: 1.5px solid #6D53AF
                 border-radius: 100%
-                position: relative
                 margin-right: 16px
                 svg 
                     position: absolute
@@ -146,6 +143,7 @@
             width: 555px
             min-height: 380px
             border-radius: 8px 
+            position: relative
             background-color: #fff
             padding: 32px 40px 50px 40px
             transition: 0.5s all
@@ -204,7 +202,6 @@
                     position: relative
                     margin-right: 16px
                     svg 
-                        position: absolute
                         left: 50%
                         top: 50%
                         transform: translateX(-40%) translateY(-50%)

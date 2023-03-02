@@ -1,34 +1,38 @@
 import Slider from "./slider";
 
 export default class MainSlider extends Slider {
-    constructor(container, btns, modal, prevModule, nextModule) {
-        super(container, btns, modal);
+    constructor(btns) {
+        super(btns);
     }
-    
+
     showSlides(n) {
-        if(n > this.slides.length) {
+        if (n > this.slides.length) {
             this.slideIndex = 1;
         }
 
-        if(n < 1) {
+        if (n < 1) {
             this.slideIndex = this.slides.length;
         }
+
+        try {
+            this.hanson.style.opacity = '0';
+
+            if (n == 3){
+                this.hanson.classList.add('animated');
+                setTimeout(() => {
+                    this.hanson.style.opacity = '1';
+                    this.hanson.classList.add('slideInUp');
+                }, 3000);
+            } else {
+                this.hanson.classList.remove('slideInUp');
+            }
+        }catch(e){}
 
         this.slides.forEach(slide => {
             slide.style.display = 'none';
         });
 
         this.slides[this.slideIndex - 1].style.display = 'block';
-
-        this.modal.forEach(item => {
-            item.style.display = 'none';
-            if(this.slideIndex === 3) {
-                setTimeout(function () {
-                    item.style.display = 'block';
-                    item.classList.add('animated', 'fadeInUp');
-                }, 3000);
-            }
-        });
     }
 
     plusSlides(n) {
@@ -38,7 +42,12 @@ export default class MainSlider extends Slider {
     bindTriggers() {
         this.btns.forEach(item => {
             item.addEventListener('click', () => {
-                this.plusSlides(1);
+                if(item.classList.contains('menu__block-schedule')) {
+                    console.log('l')
+                    this.showSlides(6);
+                } else {
+                    this.plusSlides(1);
+                }
             });
 
             item.parentNode.previousElementSibling.addEventListener('click', (e) => {
@@ -48,30 +57,32 @@ export default class MainSlider extends Slider {
             });
         });
 
-        
-        this.prevModule.forEach(item => {
+        document.querySelectorAll('.prevmodule').forEach(item => {
             item.addEventListener('click', (e) => {
-                e.preventDefault();
                 e.stopPropagation();
-
+                e.preventDefault();
                 this.plusSlides(-1);
             });
         });
 
-        this.nextModule.forEach(item => {
+        document.querySelectorAll('.nextmodule').forEach(item => {
             item.addEventListener('click', (e) => {
+                e.stopPropagation();
                 e.preventDefault();
-                e.stopPropagation();//отмена всплытия событий
-
                 this.plusSlides(1);
             });
         });
     }
 
     render() {
-        if(this.container) {//исправление бага с многостраничым проектом
-        this.bindTriggers();
-        this.showSlides(this.slideIndex);
-        } 
+        if (this.container) {
+            try {
+                this.hanson = document.querySelector('.hanson');
+            } catch(e){}
+
+            this.showSlides(this.slideIndex);
+            this.bindTriggers();
+        }
+
     }
 }
