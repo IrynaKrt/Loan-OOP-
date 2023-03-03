@@ -3,14 +3,12 @@
     height: 100vh
     padding-top: 100px
     overflow: hidden
-    .overlay
-        position: absolute
-        display: flex
+    z-index:500
     .title
         margin-left: 148px
         margin-top: -20px
     .colored
-        position: absolute
+        position: relative
         bottom: 0
         left: 84px
         width: 100%
@@ -21,7 +19,7 @@
         height: 430px
         margin-left: 148px
         margin-top: 40px
-        z-index: 10
+        z-index:500
         .slick-prev
             z-index: 12
             bottom: 0
@@ -64,6 +62,7 @@
         margin-right: 32px
         transition: 0.5s all
         position: relative
+            z-index:500
         &-info
             display: block
             .photo

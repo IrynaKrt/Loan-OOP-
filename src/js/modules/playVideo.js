@@ -4,6 +4,8 @@ export default class VideoPlayer {
         this.overlay = document.querySelector(overlay);
         this.close = this.overlay.querySelector('.close');
         this.onPlayerStateChange = this.onPlayerStateChange.bind(this);
+        this.feed = document.querySelector('.feed__slider');
+        this.feedSlider = document.querySelector('.feed__item');
     }
 
     bindTriggers() {
@@ -32,13 +34,19 @@ export default class VideoPlayer {
                         this.createPlayer(this.path);
                     }
                 }
+                if(btn.closest('.feed__item-active')) {
+                    this.feed.style.visibility = 'hidden';
+                }
             });
         });
     }
 
     bindCloseBtn() {
         this.close.addEventListener('click', () => {
+             console.log('s')
+            this.feedSlider.style.display = 'block';
             this.overlay.style.display = 'none';
+            this.feed.style.visibility = 'visible';
             this.player.stopVideo();
             this.player.destroy(); //мой более грубый вариант
         });
