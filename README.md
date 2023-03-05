@@ -1,5 +1,5 @@
 # Loan
-##### project in work
+##### https://irynakrt.github.io/Loan-OOP-/dist
 # Iryna Sittsava
 ## Student & future full-stack developer
 
@@ -12,5 +12,5 @@
 #### I am ready to learn and learn new things, because I want to be useful!
 
 ## About this project:
-#### This is my first project in the **OOP-style** on a Javascript! The "final" results of this work are saved in the master-branch for now!
+#### This is my first study-project in the **OOP-style** on a Javascript! This work was done using gulp and babel! The project was created in the style of slides that fit into one page.
 #### I thank in advance those who will express their objective opinion and tell me what can be improved ♡
