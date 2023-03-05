@@ -5802,22 +5802,6 @@ function (_Slider) {
       this.slides[this.slideIndex - 1].style.display = 'block';
     }
   }, {
-    key: "showSchleude",
-    value: function showSchleude(n) {
-      if (n > this.slides.length) {
-        this.slideIndex = 1;
-      }
-
-      if (n < 1) {
-        this.slideIndex = this.slides.length;
-      }
-
-      this.slides.forEach(function (slide) {
-        slide.style.display = 'none';
-      });
-      this.slides[n].style.display = 'block';
-    }
-  }, {
     key: "plusSlides",
     value: function plusSlides(n) {
       this.showSlides(this.slideIndex += n);
@@ -5829,11 +5813,7 @@ function (_Slider) {
 
       this.btns.forEach(function (item) {
         item.addEventListener('click', function () {
-          if (item.classList.contains('menu__block-schedule')) {
-            _this2.showSchleude(5);
-          } else {
-            _this2.plusSlides(1);
-          }
+          _this2.plusSlides(1);
         });
         item.parentNode.previousElementSibling.addEventListener('click', function (e) {
           e.preventDefault();
@@ -5944,15 +5924,15 @@ var MiniSlider =
 function (_Slider) {
   _inherits(MiniSlider, _Slider);
 
-  function MiniSlider(container, prev, next, activeClass, animate, autoplay) {
+  function MiniSlider(container, next, prev, activeClass, animate, autoplay) {
     _classCallCheck(this, MiniSlider);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(MiniSlider).call(this, container, prev, next, activeClass, animate, autoplay));
+    return _possibleConstructorReturn(this, _getPrototypeOf(MiniSlider).call(this, container, next, prev, activeClass, animate, autoplay));
   }
 
   _createClass(MiniSlider, [{
-    key: "decoriseSlides",
-    value: function decoriseSlides() {
+    key: "decorizeSlides",
+    value: function decorizeSlides() {
       var _this = this;
 
       this.slides.forEach(function (slide) {
@@ -5963,7 +5943,10 @@ function (_Slider) {
           slide.querySelector('.card__controls-arrow').style.opacity = '0';
         }
       });
-      this.slides[0].classList.add(this.activeClass);
+
+      if (!this.slides[0].closest('button')) {
+        this.slides[0].classList.add(this.activeClass);
+      }
 
       if (this.animate) {
         this.slides[0].querySelector('.card__title').style.opacity = '1';
@@ -5971,104 +5954,63 @@ function (_Slider) {
       }
     }
   }, {
-    key: "paused",
-    value: function paused() {
-      var _this2 = this;
-
-      //стоп при наведении
-      var autoplay = setInterval(function () {
-        _this2.nextSlide();
-      }, 5000);
-      this.slides[0].parentNode.addEventListener('mouseenter', function () {
-        clearInterval(autoplay);
-      });
-      this.next.forEach(function (item) {
-        item.addEventListener('mouseenter', function () {
-          clearInterval(autoplay);
-        });
-      });
-      this.prev.forEach(function (item) {
-        item.addEventListener('mouseenter', function () {
-          clearInterval(autoplay);
-        });
-      });
-    }
-  }, {
     key: "nextSlide",
     value: function nextSlide() {
-      var _this3 = this;
+      if (this.slides[1].tagName == "BUTTON" && this.slides[2].tagName == "BUTTON") {
+        this.container.appendChild(this.slides[0]); // Slide
 
-      this.container.appendChild(this.slides[0]);
-      this.decoriseSlides();
-      this.moveButtonsToEnd();
-      this.slides.forEach(function (slide) {
-        slide.addEventListener('mouseenter', function () {
-          clearInterval();
-        });
-        slide.addEventListener('mouseleave', function () {
-          _this3.nextSlide();
-        });
-      });
-    }
-  }, {
-    key: "moveButtonsToEnd",
-    value: function moveButtonsToEnd() {
-      var _this4 = this;
+        this.container.appendChild(this.slides[1]); // Btn
 
-      //элегантное решение проблемы кнопок в слaйдере!
-      this.slides.forEach(function (slide, i) {
-        if (slide.tagName === "BUTTON") {
-          _this4.container.appendChild(_this4.slides[i]);
-        }
-      });
+        this.container.appendChild(this.slides[2]); // Btn
+
+        this.decorizeSlides();
+      } else if (this.slides[1].tagName == "BUTTON") {
+        this.container.appendChild(this.slides[0]); // Slide
+
+        this.container.appendChild(this.slides[1]); // Btn
+
+        this.decorizeSlides();
+      } else {
+        this.container.appendChild(this.slides[0]);
+        this.decorizeSlides();
+      }
     }
   }, {
     key: "bindTriggers",
     value: function bindTriggers() {
-      var _this5 = this;
+      var _this2 = this;
 
-      this.next.forEach(function (item) {
-        item.addEventListener('click', function () {
-          _this5.nextSlide();
-        });
+      this.next.addEventListener('click', function () {
+        return _this2.nextSlide();
       });
-      this.prev.forEach(function (item) {
-        item.addEventListener('click', function () {
-          var active = _this5.slides[0];
+      this.prev.addEventListener('click', function () {
+        for (var i = _this2.slides.length - 1; i > 0; i--) {
+          if (_this2.slides[i].tagName !== "BUTTON") {
+            var active = _this2.slides[i];
 
-          _this5.container.insertBefore(active, _this5.slides[_this5.slides.length - 1]);
+            _this2.container.insertBefore(active, _this2.slides[0]);
 
-          _this5.decoriseSlides();
+            _this2.decorizeSlides();
 
-          _this5.moveButtonsToEnd();
-        });
+            break;
+          }
+        }
       });
     }
   }, {
     key: "init",
     value: function init() {
-      var _this6 = this;
+      var _this3 = this;
 
       try {
-        this.container.style.cssText = "\n        display: flex;\n        flex-wrap: wrap;\n        overflow: hidden;\n        align-items: flex-start;\n            ";
+        this.container.style.cssText = "\n            display: flex;\n            flex-wrap: wrap;\n            overflow: hidden;\n            align-items: flex-start;\n            ";
         this.bindTriggers();
-        this.decoriseSlides();
+        this.decorizeSlides();
 
         if (this.autoplay) {
-          this.paused();
-          this.slides[0].parentNode.addEventListener('mouseleave', function () {
-            _this6.paused();
-          });
-          this.next.forEach(function (item) {
-            item.addEventListener('mouseleave', function () {
-              _this6.paused();
-            });
-          });
-          this.prev.forEach(function (item) {
-            item.addEventListener('mouseleave', function () {
-              _this6.paused();
-            });
-          });
+          setInterval(function () {
+            return _this3.nextSlide();
+          }, 5000);
         }
       } catch (e) {}
     }
@@ -6091,117 +6033,39 @@ function (_Slider) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Slider; });
-/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each */ "./node_modules/core-js/modules/web.dom-collections.for-each.js");
-/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__);
-
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+var Slider = function Slider() {
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      _ref$container = _ref.container,
+      container = _ref$container === void 0 ? null : _ref$container,
+      _ref$btns = _ref.btns,
+      btns = _ref$btns === void 0 ? null : _ref$btns,
+      _ref$next = _ref.next,
+      next = _ref$next === void 0 ? null : _ref$next,
+      _ref$prev = _ref.prev,
+      prev = _ref$prev === void 0 ? null : _ref$prev,
+      _ref$activeClass = _ref.activeClass,
+      activeClass = _ref$activeClass === void 0 ? '' : _ref$activeClass,
+      animate = _ref.animate,
+      autoplay = _ref.autoplay;
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+  _classCallCheck(this, Slider);
 
-var Slider =
-/*#__PURE__*/
-function () {
-  function Slider() {
-    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref$container = _ref.container,
-        container = _ref$container === void 0 ? null : _ref$container,
-        _ref$btns = _ref.btns,
-        btns = _ref$btns === void 0 ? null : _ref$btns,
-        _ref$modal = _ref.modal,
-        modal = _ref$modal === void 0 ? null : _ref$modal,
-        _ref$next = _ref.next,
-        next = _ref$next === void 0 ? null : _ref$next,
-        _ref$prev = _ref.prev,
-        prev = _ref$prev === void 0 ? null : _ref$prev,
-        prevModule = _ref.prevModule,
-        nextModule = _ref.nextModule,
-        _ref$activeClass = _ref.activeClass,
-        activeClass = _ref$activeClass === void 0 ? '' : _ref$activeClass,
-        animate = _ref.animate,
-        autoplay = _ref.autoplay;
+  this.container = document.querySelector(container);
 
-    _classCallCheck(this, Slider);
+  try {
+    this.slides = this.container.children;
+  } catch (e) {}
 
-    this.container = document.querySelector(container);
-
-    try {
-      this.slides = this.container.children;
-    } catch (e) {}
-
-    this.btns = document.querySelectorAll(btns);
-    this.prev = document.querySelectorAll(prev);
-    this.next = document.querySelectorAll(next);
-    this.prevModule = document.querySelectorAll(prevModule);
-    this.nextModule = document.querySelectorAll(nextModule);
-    this.activeClass = activeClass;
-    this.animate = animate;
-    this.autoplay = autoplay;
-    this.slideIndex = 1;
-    this.modal = document.querySelectorAll(modal);
-  }
-
-  _createClass(Slider, [{
-    key: "showSlides",
-    value: function showSlides(n) {
-      var _this = this;
-
-      if (n > this.slides.length) {
-        this.slideIndex = 1;
-      }
-
-      if (n < 1) {
-        this.slideIndex = this.slides.length;
-      }
-
-      this.slides.forEach(function (slide) {
-        slide.style.display = 'none';
-      });
-      this.slides[this.slideIndex - 1].style.display = 'block';
-      this.modal.forEach(function (item) {
-        item.style.display = 'none';
-
-        if (_this.slideIndex === 3) {
-          setTimeout(function () {
-            item.style.display = 'block';
-            item.classList.add('animated', 'fadeInUp');
-          }, 3000);
-        }
-      });
-    }
-  }, {
-    key: "plusSlides",
-    value: function plusSlides(n) {
-      try {
-        this.showSlides(this.slideIndex += n);
-      } catch (e) {}
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-
-      try {
-        this.btns.forEach(function (item) {
-          item.addEventListener('click', function () {
-            _this2.plusSlides(1);
-          });
-          item.parentNode.previousElementSibling.addEventListener('click', function (e) {
-            e.preventDefault();
-            _this2.slideIndex = 1;
-
-            _this2.showSlides(_this2.slideIndex);
-          });
-        });
-        this.showSlides(this.slideIndex);
-      } catch (e) {}
-    }
-  }]);
-
-  return Slider;
-}();
+  this.btns = document.querySelectorAll(btns);
+  this.prev = document.querySelector(prev);
+  this.next = document.querySelector(next);
+  this.activeClass = activeClass;
+  this.animate = animate;
+  this.autoplay = autoplay;
+  this.slideIndex = 1;
+};
 
 
 
