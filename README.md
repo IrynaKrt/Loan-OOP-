@@ -1,5 +1,5 @@
 # Loan
-##### https://irynakrt.github.io/Loan-OOP-/dist
+##### https://loan-oop.netlify.app/
 # Iryna Sittsava
 ## Student & future full-stack developer
 
